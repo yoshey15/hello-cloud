@@ -1,9 +1,8 @@
-name: Build & Push Docker image to ACR
+name: Build & Push Docker image to ACR (latest + versioned)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -14,21 +13,23 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      # Si ya usas Service Principal para login en Azure, puedes omitir esta acción.
-      # Aquí no se requiere 'azure/login' porque no haremos deploy ni llamaremos a la API de App Service.
+      - name: 🔐 Azure Login (Service Principal)
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 🔑 Login to ACR
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}     # ej. acrhellocloudud.azurecr.io
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: 🏷️ Set image tag (sha corto)
+      - name: 🏷️ Set version tag (short sha)
         id: vars
         run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
 
-      - name: 🏗️ Build & Push (latest + tag de commit)
+      - name: 🏗️ Build & Push Docker images
         run: |
           docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/hello-cloud:latest .
           docker tag  ${{ secrets.ACR_LOGIN_SERVER }}/hello-cloud:latest ${{ secrets.ACR_LOGIN_SERVER }}/hello-cloud:${{ steps.vars.outputs.TAG }}
