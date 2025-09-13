@@ -18,7 +18,7 @@ app.get("/version", (_req, res) => {
   res.json({ name: "hello-cloud", version: "1.0.0" });
 });
 
-app.get("/ping", (_req, res) => {
+app.get("/ping0", (_req, res) => {
   res.json({ pong: true, at: new Date().toISOString() });
 });
 
