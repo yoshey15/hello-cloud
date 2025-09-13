@@ -18,6 +18,10 @@ app.get("/version", (_req, res) => {
   res.json({ name: "hello-cloud", version: "1.0.0" });
 });
 
+app.get("/ping", (_req, res) => {
+  res.json({ pong: true, at: new Date().toISOString() });
+});
+
 // Nuevo endpoint /about
 app.get("/about", (_req, res) => {
   res.json({
