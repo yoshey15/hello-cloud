@@ -18,8 +18,8 @@ app.get("/version", (_req, res) => {
   res.json({ name: "hello-cloud", version: "1.0.0" });
 });
 
-app.get("/ping0", (_req, res) => {
-  res.json({ pong001: true, at: new Date().toISOString() });
+app.get("/ping", (_req, res) => {
+  res.json({ pong: "realizado por: obrian sanchez y andres cardoso", at: new Date().toISOString() });
 });
 
 // Nuevo endpoint /about
